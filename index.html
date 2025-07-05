@@ -1,154 +1,449 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zyranex Server minecraft survie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zyranex - Serveur Minecraft</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #eee;
+      user-select: none;
+    }
 
     body {
-      margin: 0;
-      font-family: 'Orbitron', sans-serif;
-      background: radial-gradient(ellipse at top, #0a0a0a, #000);
-      color: #00ffe1;
-      overflow-x: hidden;
+      background: #121212;
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      padding: 40px 20px;
+      perspective: 1000px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    #container {
+      background: #181818;
+      border-radius: 20px;
+      max-width: 900px;
+      width: 100%;
+      padding: 30px 40px;
+      box-shadow: 0 20px 40px #0008;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      cursor: grab;
+    }
+
+    #container:active {
+      cursor: grabbing;
     }
 
     header {
-      position: relative;
       text-align: center;
-      width: 100%;
+      margin-bottom: 30px;
+      user-select: none;
+      transform-style: preserve-3d;
     }
 
-    header img {
-      width: 100%;
-      max-height: 450px;
-      object-fit: cover;
-      animation: zoomIn 8s ease-in-out infinite alternate;
+    /* Logo avec animation */
+    #logo {
+      width: 200px;
+      height: 200px;
+      background: url("assets/logo.png") no-repeat center / contain;
+      margin: 0 auto 15px auto;
+      transition: width 0.3s ease, height 0.3s ease;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #4caf50aa;
+      transform-style: preserve-3d;
+      will-change: transform;
     }
 
-    header h1 {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3em;
-      text-shadow: 0 0 15px #00ffe1;
-      margin: 0;
-    }
-
-    .ip-box {
-      background: #000;
-      border: 2px solid #00ffe1;
-      padding: 10px 20px;
-      border-radius: 10px;
-      display: inline-block;
-      margin-top: 1.5rem;
-      margin-bottom: 2rem;
-      animation: pulse 2s infinite;
-    }
-
-    section {
-      padding: 3rem 2rem;
-      text-align: center;
-      max-width: 800px;
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 3rem);
+      font-weight: 900;
+      color: #4caf50;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px #4caf50cc;
+      transform-style: preserve-3d;
+      will-change: transform;
     }
 
     h2 {
-      font-size: 2em;
-      margin-bottom: 1.5rem;
-      color: #00ffcc;
-      animation: fadeInUp 1s ease-out both;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 2rem 0;
-      animation: fadeInUp 1s ease-out both;
-    }
-
-    li {
-      font-size: 1.3em;
-      margin: 0.8rem 0;
-      animation: fadeInUp 1s ease-out both;
-    }
-
-    footer {
-      background-color: #111;
-      padding: 1.5rem 1rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #ccc;
       text-align: center;
-      font-size: 0.9em;
-      color: #888;
-      width: 100%;
-      margin-top: 3rem;
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      transform-style: preserve-3d;
+      will-change: transform;
     }
 
-    /* Animations */
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 5px #00ffe1; }
-      50% { transform: scale(1.05); box-shadow: 0 0 20px #00ffe1; }
-      100% { transform: scale(1); box-shadow: 0 0 5px #00ffe1; }
+    /* Serveur info */
+    .server-info,
+    .votes {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      width: 320px;
+      margin-bottom: 40px;
+      box-shadow: 0 0 12px #4caf5066;
+      text-align: center;
+      transform-style: preserve-3d;
+      will-change: transform;
     }
 
-    @keyframes zoomIn {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.1); }
+    .votes {
+      box-shadow: 0 0 12px #ffb300aa;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .server-info h2,
+    .votes h2 {
+      margin-bottom: 12px;
     }
 
-    .button {
-      margin-top: 1rem;
-      background-color: #00ffe1;
-      border: none;
-      color: #000;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: bold;
+    .server-info h2 {
+      color: #81c784;
+    }
+
+    .votes h2 {
+      color: #ffb300;
+    }
+
+    .server-ip {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: #a5d6a7;
+      user-select: text;
       cursor: pointer;
-      font-size: 1em;
-      transition: transform 0.3s ease, background-color 0.3s ease;
-      animation: fadeInUp 1.5s ease-out both;
+      outline-offset: 4px;
+      transition: background-color 0.3s ease;
+      border-radius: 6px;
     }
 
-    .button:hover {
+    .server-ip:focus,
+    .server-ip:hover {
+      background-color: #2e7d32;
+      color: #c8e6c9;
+    }
+
+    /* Joueurs en ligne */
+    .players {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #b9f6ca;
+    }
+
+    /* Discord */
+    .discord {
+      margin-bottom: 40px;
+      text-align: center;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .discord a {
+      color: #7289da;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1.3rem;
+      border: 2px solid #7289da;
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: inline-block;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+
+    .discord a:hover,
+    .discord a:focus {
+      background-color: #7289da;
+      color: #fff;
+      outline-offset: 4px;
+    }
+
+    /* Votes */
+    .votes-count {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ffd54f;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    /* Staff */
+    .staff {
+      max-width: 900px;
+      width: 100%;
+      margin-top: 20px;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .staff h2 {
+      text-align: center;
+      color: #4caf50;
+      margin-bottom: 30px;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+
+    .staff-category {
+      margin-bottom: 40px;
+    }
+
+    .staff-category h3 {
+      color: #81c784;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #4caf50;
+      padding-bottom: 6px;
+      max-width: 200px;
+      font-size: 1.2rem;
+    }
+
+    .staff-members {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      justify-content: start;
+    }
+
+    .staff-member {
+      background: #262626;
+      padding: 15px;
+      border-radius: 12px;
+      width: 140px;
+      text-align: center;
+      box-shadow: 0 0 12px #4caf5055;
+      user-select: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: default;
+    }
+
+    .staff-member:hover,
+    .staff-member:focus-within {
       transform: scale(1.1);
-      background-color: #00ffcc;
+      box-shadow: 0 0 20px #4caf50cc;
+      outline: none;
+    }
+
+    .staff-member img {
+      width: 100px;
+      height: 100px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      border: 2px solid #4caf50;
+      background-color: #181818;
+      object-fit: cover;
+      user-select: none;
+    }
+
+    .staff-member .name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      color: #a5d6a7;
+      word-break: break-word;
+    }
+
+    .staff-member .role {
+      font-size: 0.9rem;
+      color: #7cb342;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .staff-members {
+        justify-content: center;
+      }
+
+      .server-info,
+      .votes {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <img src="banner.png" alt="Serveur Minecraft">
-    <h1>Serveur PvP • Survie</h1>
-    <div class="ip-box">IP : <strong>31.6.7.13:27200</strong></div>
-  </header>
+  <div id="container" aria-label="Page principale de Zyranex Serveur Minecraft">
+    <header>
+      <div id="logo" aria-label="Logo Zyranex" role="img"></div>
+      <h1>Zyranex</h1>
+      <h2>Serveur Minecraft 1.21.4</h2>
+    </header>
 
-  <section>
-    <h2>🔥 Modes de Jeu</h2>
-    <ul>
-      <li>⚔️ PvP dans la survie</li>
-      <li>🌲 Survie avec du fun et bientot des kits</li>
-    </ul>
-    <button class="button" onclick="navigator.clipboard.writeText('31.6.7.13:27200'); alert('IP copiée !')">Copier l'IP</button>
-  </section>
+    <section class="server-info" aria-label="Informations serveur">
+      <h2>Informations serveur</h2>
+      <div class="server-ip" title="Cliquez pour copier l'adresse IP" id="ip-server" tabindex="0" role="button"
+        aria-pressed="false" aria-label="Adresse IP du serveur, cliquez pour copier">
+        zyranex.playcraft.me
+      </div>
+      <div class="players" id="players-online" aria-live="polite">Chargement des joueurs en ligne...</div>
+    </section>
 
-  <footer>
-    &copy; 2025 Zyranex | Développé par Zyranex
-  </footer>
+    <section class="votes" aria-label="Nombre de votes">
+      <h2>Votes sur Top-Serveurs</h2>
+      <div class="votes-count" id="votes-count" aria-live="polite">Chargement des votes...</div>
+    </section>
+
+    <section class="discord" aria-label="Lien Discord du serveur">
+      <a href="https://discord.gg/xfWHgzcfED" target="_blank" rel="noopener" aria-label="Rejoindre le Discord Zyranex">
+        Rejoindre le Discord
+      </a>
+    </section>
+
+    <section class="staff" aria-label="Équipe du serveur">
+  <h2>Équipe du serveur</h2>
+
+  <div class="staff-category" aria-label="Administrateurs">
+    <h3>Administrateurs</h3>
+    <div class="staff-members">
+      <div class="staff-member" tabindex="0">
+        <img src="https://minotar.net/avatar/Nolannax" alt="Avatar Nolannax" />
+        <div class="name">Nolannax</div>
+        <div class="role">Fondateur</div>
+      </div>
+      <div class="staff-member" tabindex="0">
+        <img src="https://minotar.net/avatar/Paolo245" alt="Avatar Paolo245" />
+        <div class="name">Paolo245</div>
+        <div class="role">Administrateur</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <script>
+    // Effet 3D qui suit la souris sur #container
+    const container = document.getElementById("container");
+    let mouseX = 0,
+      mouseY = 0;
+    let centerX = window.innerWidth / 2,
+      centerY = window.innerHeight / 2;
+    let maxRotation = 12; // degrés max
+
+    window.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      updateRotation();
+    });
+
+    function updateRotation() {
+      let percentX = (mouseX - centerX) / centerX; // -1 à 1
+      let percentY = (mouseY - centerY) / centerY; // -1 à 1
+
+      // Inverser Y pour effet naturel
+      percentY = -percentY;
+
+      let rotateX = percentY * maxRotation;
+      let rotateY = percentX * maxRotation;
+
+      container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(30px)`;
+    }
+
+    window.addEventListener("resize", () => {
+      centerX = window.innerWidth / 2;
+      centerY = window.innerHeight / 2;
+      updateRotation();
+    });
+
+    // Copie de l'IP au clic et clavier
+    const ipServer = document.getElementById("ip-server");
+    ipServer.addEventListener("click", copyIP);
+    ipServer.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        copyIP();
+      }
+    });
+
+    function copyIP() {
+      const text = ipServer.textContent.trim();
+      if (!navigator.clipboard) {
+        alert("Votre navigateur ne supporte pas le presse-papier.");
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        ipServer.setAttribute("aria-pressed", "true");
+        ipServer.textContent = "Adresse copiée !";
+        setTimeout(() => {
+          ipServer.textContent = text;
+          ipServer.setAttribute("aria-pressed", "false");
+        }, 2000);
+      });
+    }
+
+    // Récupération des joueurs en ligne via API publique mcsrvstat.us
+    async function fetchPlayers() {
+      try {
+        const response = await fetch("https://api.mcsrvstat.us/2/zyranex.playcraft.me");
+        if (!response.ok) throw new Error("Erreur API");
+        const data = await response.json();
+        const playersOnline = data.players?.online ?? 0;
+        const maxPlayers = data.players?.max ?? 100;
+        document.getElementById("players-online").textContent = `${playersOnline} joueur(s) en ligne / ${maxPlayers} maximum`;
+      } catch {
+        document.getElementById("players-online").textContent = "Impossible de récupérer les joueurs en ligne.";
+      }
+    }
+
+    // Récupération réelle des votes via Top-Serveurs.net (proxy CORS nécessaire)
+    // Ici on utilise une petite astuce avec un proxy CORS public (attention, usage limité)
+    // Sinon tu peux créer ton propre proxy en backend
+    async function fetchVotes() {
+      try {
+        // URL publique du serveur sur Top-Serveurs
+        const url = "https://top-serveurs.net/serveur/minecraft/zyranex-playcraft-15826";
+        // Proxy CORS pour contourner (service public)
+        const proxy = "https://api.allorigins.win/get?url=" + encodeURIComponent(url);
+
+        const response = await fetch(proxy);
+        if (!response.ok) throw new Error("Erreur proxy");
+
+        const result = await response.json();
+        const htmlText = result.contents;
+
+        // Parser HTML pour extraire le nombre de votes (ex : <div class="votes-count">1234</div>)
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
+
+        // On cherche un élément contenant les votes
+        // Selon la structure Top-Serveurs, c'est dans un div avec class "top-serveurs-score__votes"
+        // Vérifie en inspectant la page si ça a changé
+
+        const voteElement = doc.querySelector(".top-serveurs-score__votes");
+        if (voteElement) {
+          // Le nombre est souvent dans un span ou directement le texte
+          const votesText = voteElement.textContent.trim().replace(/\D/g, "");
+          const votes = parseInt(votesText, 10);
+          if (!isNaN(votes)) {
+            document.getElementById("votes-count").textContent = votes.toLocaleString("fr-FR");
+            return;
+          }
+        }
+        document.getElementById("votes-count").textContent = "Indisponible";
+      } catch (err) {
+        console.error(err);
+        document.getElementById("votes-count").textContent = "Erreur lors du chargement des votes.";
+      }
+    }
+
+    // Initial load
+    fetchPlayers();
+    fetchVotes();
+
+    // Refresh every minute
+    setInterval(fetchPlayers, 60000);
+    setInterval(fetchVotes, 60000);
+  </script>
 </body>
+
 </html>
